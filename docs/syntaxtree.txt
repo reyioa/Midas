@@ -1,0 +1,91 @@
+<expression> ::= <term> ( '*' | '/' ) <expression>
+                | <term>
+
+<term> ::= <bitshift> ('+' | '-') <term>
+          | <bitshift>
+
+<bitshift> ::= <bitwise> ('+' | '-') <bitshift>
+          | <bitwise>
+<bitwise> ::= <primary> ('+' | '-') <bitwise>
+          | <primary>
+
+<primary> ::= <primary>
+            |<element>
+
+<element> ::= '(' expression ')'
+              | <definition>
+              | <literal>
+              | <function-declaration>
+              | <struct-declaration>
+
+<literal> ::= <int> | <string> | <char> | <bool> | <float>
+
+<definition> ::= <indentifier> { '.' <indentifier> } 
+
+<type> ::= 'bool' | 'int' | 'float' | 'char' | 'string' | 'void' | 'null' | <definition>
+
+<varible-definition> ::= ( 'const' | 'mut' ) <definition> ':' <varible-type> '=' <expression> ';'
+
+<varible-mutate> ::= <definition> ( '+=' | '-=' | '/=' | '*=' | '%=' |'>>=' |'<<=' |'^=' | '&=' | '|=') <expression>
+
+<parameter-list> ::= <type> <indentifier> { ',' <type> <indentifier> }
+
+<template>  ::= '[' [ '...' ]<identifier> { ',' <identifier> } ']'
+
+
+<function-definition> ::= 'fun' '( <parameter-list> ')' [ template ] -> <type> ( ';' | <block> )
+
+<function-declaration> ::= <definition> [type {',' type} ]'(' [<definition>] { ',' <definition> } ')'
+
+<boolean-expression> ::=   <expression> ('!=' | '==' | '>' | '>=' | '<' | '<=') <expression>
+                          |<expression>
+
+<and-expression> <expression> ( '&&' <expression>) *
+
+<binary-expression> ::= <and-expression> { '||' <and-expression> } 
+
+<if> ::= 'if' '(' <binary-expression> ')' <block> {<elif> * } [<else>]
+
+<elif> ::= 'elif' '(' <binary-expression> ')' <block>
+
+<else> ::= 'else' <block>
+
+<for> := 'for' '(' <definition> <indentifier> 'in' <expression> ')' <block>
+
+<while> := 'while' '(' binary-expression ')' <block>
+
+<do> := 'do' <block> 'while' '(' binary-expression ')'
+
+<case> := 'case' <definition> <block>
+<default> := 'default' <definition> <block>
+
+<switch> := 'switch' '{' { <case>  | <default> } '}'
+
+<struct-definition> := 'struct' <definition> [ <template> ] ':' [ public | private ] <definition> '{' { ( <varible-definition> | <function-declaration> )  } '}'
+
+<struct-declaration> := [<type> {',' <type> }]'{' ( <expression> | '.' <definition> '=' <definition>) [ ',' (<expression> | '.' <definition> '=' <definition>) ]
+
+<enum-definition> := 'enum' <definition> '{' [ <indentifier> ] '}'
+
+<interface-definition> := 'interface' <definition> '{' [function-declaration] '}'
+
+<async> := 'async' <expression>
+
+<await> := 'await' <expression>
+
+<yield> := 'yield' <expression>
+α •
+<statement> ::= <expression> ';' | <varible-definition> | <function-definition> ';' | <varible-mutate> ';' | <if> | <while> | <do> | <switch> 
+
+<import> ::= 'import' <definition> ['api'] ['as' <definition>]
+
+<block> ::= '{' { <statement> } '}'
+
+[start' -> start]
+
+[definition -> • term * expression, term]
+[definition -> • term / expression, term]
+
+[definition ->  term • * expression, * | /]
+[definition ->  term • / expression, * | /]
+

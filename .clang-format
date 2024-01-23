@@ -1,0 +1,8 @@
+
+AlignAfterOpenBracket: Align
+AlignConsecutiveMacros:
+  Enabled: true
+  AcrossEmptyLines:false 
+  AcrossComments: false
+
+
