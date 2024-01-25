@@ -11,26 +11,22 @@ namespace parser {
 class Parser {
 public:
   Parser() {
-    _terminals = {};
-    _nonterminals = {};
+    _Terminals = {};
+    _Nonterminals = {};
 
-    _terminal_counter = 0;
-    _nonterminal_counter = 0;
+    _TerminalCounter = 0;
+    _NonterminalCounter = 0;
   }
 
 private:
-  inline token::Token nextToken() {
-    return this->_terminals[++this->_terminal_counter];
-  };
-  inline token::Token peekToken() {
-    return this->_terminals[this->_terminal_counter + 1];
-  };
+  token::Token nextToken();
+  token::Token peekToken();
 
-  std::unique_ptr<ast::ASTTermNode> parseExpression();
-  std::unique_ptr<ast::ASTTermNode> parseTerm();
-  std::unique_ptr<ast::ASTBitshiftNode> parseBitshift();
-  std::unique_ptr<ast::ASTBitwiseNode> parseBitwise();
-  std::unique_ptr<ast::ASTPrimaryNode> parsePrimary();
+  std::unique_ptr<ast::ASTExpressionNode> parseExpression();
+  std::unique_ptr<ast::ASTTermExpressionNode> parseTerm();
+  std::unique_ptr<ast::ASTBitshiftExpressionNode> parseBitshift();
+  std::unique_ptr<ast::ASTBitwiseExpressionNode> parseBitwise();
+  std::unique_ptr<ast::ASTTokenNode> parseToken();
   std::unique_ptr<ast::ASTElementNode> parseElement();
 
   std::unique_ptr<ast::ASTLiteralNode> parseLiteral();
@@ -41,14 +37,15 @@ private:
   std::unique_ptr<ast::ASTTemplateNode> parseTemplate();
 
   std::unique_ptr<ast::ASTFunctionDefinitionNode> parseFunctionDefinition();
-  std::unique_ptr<ast::ASTFunctionDeclarationNode> parseFunctionDeclaration();
+  std::unique_ptr<ast::ASTFunctionCallExpressionNode>
+  parseFunctionDeclaration();
   std::unique_ptr<ast::ASTBooleanExpressionNode> parseBooleanExpression();
   std::unique_ptr<ast::ASTAndExpressionNode> parseAndExpression();
   std::unique_ptr<ast::ASTOrExpressionNode> parseOrExpression();
 
   std::unique_ptr<ast::ASTIfNode> parseIf();
-  std::unique_ptr<ast::ASTElifNode> parseElif();
-  std::unique_ptr<ast::ASTElseNode> parseElse();
+  std::unique_ptr<ast::ASTElifControlIfNode> parseElif();
+  std::unique_ptr<ast::ASTElifControlIfNode> parseElse();
 
   std::unique_ptr<ast::ASTWhileNode> parseWhile();
   std::unique_ptr<ast::ASTDoNode> parseDo();
@@ -56,7 +53,7 @@ private:
   std::unique_ptr<ast::ASTSwitchNode> parseSwitch();
 
   std::unique_ptr<ast::ASTStructDefinitionNode> parseStructDefinition();
-  std::unique_ptr<ast::ASTStructDeclarationNode> parseStructDeclaration();
+  std::unique_ptr<ast::ASTStructCallExpressionNode> parseStructDeclaration();
   std::unique_ptr<ast::ASTEnumDefinitionNode> parseEnumDefinition();
   std::unique_ptr<ast::ASTInterfaceDefinitionNode> parseInterfaceDefinition();
 
@@ -68,13 +65,13 @@ private:
   std::unique_ptr<ast::ASTBlockNode> parseBlock();
 
   std::unique_ptr<ast::ASTNode> parseImport();
-
   std::unique_ptr<ast::ASTNode> parseStart();
-  std::vector<token::Token> _terminals;
-  std::vector<ast::ASTNode> _nonterminals;
 
-  int _terminal_counter;
-  int _nonterminal_counter;
+  std::vector<token::Token> _Terminals;
+  std::vector<ast::ASTNode> _Nonterminals;
+
+  int _NonterminalCounter;
+  int _TerminalCounter;
 };
 
 } // namespace parser

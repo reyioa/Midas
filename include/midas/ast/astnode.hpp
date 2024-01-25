@@ -116,7 +116,7 @@ struct ASTVaribleTypeNode : ASTNode {
   std::unique_ptr<ASTNode> Node;
   ASTVaribleTypeNode(std::unique_ptr<ASTNode> Node) : Node(std::move(Node)){};
 };
-struct ASTVaribleDefinitionNode : ASTNode {
+struct ASTVaribleDefinitionNode : ASTStatementNode {
   token::Token VarType;
   std::unique_ptr<ASTDefinitionNode> Name;
   std::unique_ptr<ASTVaribleTypeNode> Type;
