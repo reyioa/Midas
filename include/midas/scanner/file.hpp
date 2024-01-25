@@ -3,11 +3,9 @@
 
 #include <string>
 namespace midas {
-namespace midas {
 namespace scanner {
 struct File {};
 } // namespace scanner
-} // namespace midas
 } // namespace midas
 
 #endif

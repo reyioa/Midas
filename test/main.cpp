@@ -5,7 +5,7 @@
 
 int main() {
   try {
-    midas::midas::scanner::Scanner s(
+    midas::scanner::Scanner s(
         "fun main() -> string {if (true) {\n return \"Hello World\"\n} else "
         "{\n return \"Why\"");
     s.scanTokens();

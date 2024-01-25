@@ -4,7 +4,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <string>
-void midas::midas::scanner::Scanner::_create_string() {
+void midas::scanner::Scanner::_createString() {
   std::string s;
 
   while (peek() != '"' && !isEnd(_position.current)) {
@@ -16,21 +16,21 @@ void midas::midas::scanner::Scanner::_create_string() {
   }
 
   (void)advance();
-  this->_tokens.emplace_back(token::eToken::kString, s.c_str(), _position.line,
-                             _position.cursor);
+  this->_tokens.emplace_back(token::eToken::TK_String, s.c_str(),
+                             _position.line, _position.cursor);
 }
-void midas::midas::scanner::Scanner::_create_char() {
+void midas::scanner::Scanner::_createChar() {
   std::string s;
   if (isEnd(_position.current)) {
     return;
   }
   s += advance();
   (void)advance();
-  this->_tokens.emplace_back(token::eToken::kChar, s.c_str(), _position.line,
+  this->_tokens.emplace_back(token::eToken::TK_Char, s.c_str(), _position.line,
                              _position.cursor);
 }
 
-void midas::midas::scanner::Scanner::_create_number() {
+void midas::scanner::Scanner::_createNumber() {
   std::string s;
   s += *(_navigator);
   while (std::isdigit(peek())) {
@@ -43,16 +43,16 @@ void midas::midas::scanner::Scanner::_create_number() {
     while (std::isdigit(peek())) {
       s += advance();
     }
-    this->_tokens.emplace_back(token::eToken::kFloat, s.c_str(), _position.line,
-                               _position.cursor);
+    this->_tokens.emplace_back(token::eToken::TK_Float, s.c_str(),
+                               _position.line, _position.cursor);
 
     return;
   }
-  this->_tokens.emplace_back(token::eToken::kInt, s.c_str(), _position.line,
+  this->_tokens.emplace_back(token::eToken::TK_Int, s.c_str(), _position.line,
                              _position.cursor);
 }
 
-void midas::midas::scanner::Scanner::_create_identifier() {
+void midas::scanner::Scanner::_createIdentifier() {
   std::string s;
   s += *(_navigator);
 
@@ -60,8 +60,8 @@ void midas::midas::scanner::Scanner::_create_identifier() {
     s += advance();
   }
   if (token::get_keywords().find(s) == token::get_keywords().end()) {
-    this->_tokens.emplace_back(token::eToken::kIden, s.c_str(), _position.line,
-                               _position.cursor);
+    this->_tokens.emplace_back(token::eToken::TK_Iden, s.c_str(),
+                               _position.line, _position.cursor);
     return;
   }
   this->_tokens.emplace_back(token::get_keywords().find(s)->second,
@@ -69,8 +69,7 @@ void midas::midas::scanner::Scanner::_create_identifier() {
                              _position.line, _position.cursor);
   return;
 }
-std::vector<midas::midas::token::Token>
-midas::midas::scanner::Scanner::scanTokens() {
+std::vector<midas::token::Token> midas::scanner::Scanner::scanTokens() {
   this->_tokens = {};
   while (!this->isEnd(this->_position.current)) {
     _scanToken();
@@ -78,7 +77,7 @@ midas::midas::scanner::Scanner::scanTokens() {
   return this->_tokens;
 }
 
-void midas::midas::scanner::Scanner::_scanToken() {
+void midas::scanner::Scanner::_scanToken() {
   switch (*_navigator) {
   case ' ':
   case '\r':
@@ -89,76 +88,76 @@ void midas::midas::scanner::Scanner::_scanToken() {
     _position.cursor = 0;
     break;
   case '+':
-    this->_tokens.emplace_back(this->match('=')   ? token::eToken::kAddAssign
-                               : this->match('+') ? token::eToken::kInc
-                                                  : token::eToken::kAdd,
+    this->_tokens.emplace_back(this->match('=')   ? token::eToken::TK_AddAssign
+                               : this->match('+') ? token::eToken::TK_Inc
+                                                  : token::eToken::TK_Add,
                                "", _position.line, _position.cursor);
     break;
   case '-':
-    this->_tokens.emplace_back(this->match('=')   ? token::eToken::kSubAssign
-                               : this->match('-') ? token::eToken::kDec
-                               : this->match('>') ? token::eToken::kArrow
-                                                  : token::eToken::kSub,
+    this->_tokens.emplace_back(this->match('=')   ? token::eToken::TK_SubAssign
+                               : this->match('-') ? token::eToken::TK_Dec
+                               : this->match('>') ? token::eToken::TK_Arrow
+                                                  : token::eToken::TK_Sub,
                                "", _position.line, _position.cursor);
 
     break;
   case '*':
-    this->_tokens.emplace_back(this->match('=') ? token::eToken::kMultAssign
-                                                : token::eToken::kMult,
+    this->_tokens.emplace_back(this->match('=') ? token::eToken::TK_MultAssign
+                                                : token::eToken::TK_Mult,
                                "", _position.line, _position.cursor);
     break;
   case '/':
-    this->_tokens.emplace_back(this->match('=') ? token::eToken::kQuoAssign
-                                                : token::eToken::kQuo,
+    this->_tokens.emplace_back(this->match('=') ? token::eToken::TK_QuoAssign
+                                                : token::eToken::TK_Quo,
                                "", _position.line, _position.cursor);
     break;
   case '%':
-    this->_tokens.emplace_back(this->match('=') ? token::eToken::kRemAssign
-                                                : token::eToken::kRem,
+    this->_tokens.emplace_back(this->match('=') ? token::eToken::TK_RemAssign
+                                                : token::eToken::TK_Rem,
                                "", _position.line, _position.cursor);
     break;
   case '=':
-    this->_tokens.emplace_back(this->match('=')   ? token::eToken::kEqual
-                               : this->match('>') ? token::eToken::kBigArrow
-                                                  : token::eToken::kAssign,
+    this->_tokens.emplace_back(this->match('=')   ? token::eToken::TK_Equal
+                               : this->match('>') ? token::eToken::TK_BigArrow
+                                                  : token::eToken::TK_Assign,
                                "", _position.line, _position.cursor);
     break;
   case '&':
-    this->_tokens.emplace_back(this->match('=')   ? token::eToken::kAndAssign
-                               : this->match('&') ? token::eToken::kLogAnd
-                                                  : token::eToken::kAnd,
+    this->_tokens.emplace_back(this->match('=')   ? token::eToken::TK_AndAssign
+                               : this->match('&') ? token::eToken::TK_LogAnd
+                                                  : token::eToken::TK_And,
                                "", _position.line, _position.cursor);
     break;
   case '|':
-    this->_tokens.emplace_back(this->match('=')   ? token::eToken::kOrAssign
-                               : this->match('|') ? token::eToken::kLogOr
-                                                  : token::eToken::kOrAssign,
+    this->_tokens.emplace_back(this->match('=')   ? token::eToken::TK_OrAssign
+                               : this->match('|') ? token::eToken::TK_LogOr
+                                                  : token::eToken::TK_OrAssign,
                                "", _position.line, _position.cursor);
     break;
   case '^':
-    this->_tokens.emplace_back(this->match('=') ? token::eToken::kXor
-                                                : token::eToken::kXorAssign,
+    this->_tokens.emplace_back(this->match('=') ? token::eToken::TK_Xor
+                                                : token::eToken::TK_XorAssign,
                                "", _position.line, _position.cursor);
     break;
   case '>':
     this->_tokens.emplace_back(
-        this->match('=')   ? token::eToken::kGreaterEqual
-        : this->match('>') ? (this->match('=') ? token::eToken::kShrAssign
-                                               : token::eToken::kShr)
-                           : token::eToken::kGreater,
+        this->match('=')   ? token::eToken::TK_GreaterEqual
+        : this->match('>') ? (this->match('=') ? token::eToken::TK_ShrAssign
+                                               : token::eToken::TK_Shr)
+                           : token::eToken::TK_Greater,
         "", _position.line, _position.cursor);
     break;
   case '<':
     this->_tokens.emplace_back(
-        this->match('=')   ? token::eToken::kLessEqual
-        : this->match('<') ? (this->match('=') ? token::eToken::kShlAssign
-                                               : token::eToken::kShl)
-                           : token::eToken::kLess,
+        this->match('=')   ? token::eToken::TK_LessEqual
+        : this->match('<') ? (this->match('=') ? token::eToken::TK_ShlAssign
+                                               : token::eToken::TK_Shl)
+                           : token::eToken::TK_Less,
         "", _position.line, _position.cursor);
     break;
   case '!':
-    this->_tokens.emplace_back(this->match('=') ? token::eToken::kNot
-                                                : token::eToken::kNotEqual,
+    this->_tokens.emplace_back(this->match('=') ? token::eToken::TK_Not
+                                                : token::eToken::TK_NotEqual,
                                "", _position.line, _position.cursor);
     break;
 
@@ -166,45 +165,45 @@ void midas::midas::scanner::Scanner::_scanToken() {
     this->_tokens.emplace_back(
         this->match('.')
             ? this->match('.')
-                  ? token::eToken::kEllipsis
+                  ? token::eToken::TK_Ellipsis
                   : throw std::runtime_error("kEllipsis is not right")
-            : token::eToken::kPeriod,
+            : token::eToken::TK_Period,
         "", _position.line, _position.cursor);
     break;
 
   case '(':
-    this->_tokens.emplace_back(token::eToken::kLParen, "", _position.line,
+    this->_tokens.emplace_back(token::eToken::TK_LParen, "", _position.line,
                                _position.cursor);
     break;
   case '[':
-    this->_tokens.emplace_back(token::eToken::kLBrace, "", _position.line,
+    this->_tokens.emplace_back(token::eToken::TK_LBrace, "", _position.line,
                                _position.cursor);
     break;
   case '{':
-    this->_tokens.emplace_back(token::eToken::kLBrack, "", _position.line,
+    this->_tokens.emplace_back(token::eToken::TK_LBrack, "", _position.line,
                                _position.cursor);
     break;
   case ')':
-    this->_tokens.emplace_back(token::eToken::kRParen, "", _position.line,
+    this->_tokens.emplace_back(token::eToken::TK_RParen, "", _position.line,
                                _position.cursor);
     break;
   case ']':
-    this->_tokens.emplace_back(token::eToken::kRBrace, "", _position.line,
+    this->_tokens.emplace_back(token::eToken::TK_RBrace, "", _position.line,
                                _position.cursor);
     break;
   case '}':
-    this->_tokens.emplace_back(token::eToken::kRBrack, "", _position.line,
+    this->_tokens.emplace_back(token::eToken::TK_RBrack, "", _position.line,
                                _position.cursor);
     break;
   case ',':
-    this->_tokens.emplace_back(token::eToken::kComma, "", _position.line,
+    this->_tokens.emplace_back(token::eToken::TK_Comma, "", _position.line,
                                _position.cursor);
     break;
   case ';':
-    this->_tokens.emplace_back(token::eToken::kSemicolon, "", _position.line,
+    this->_tokens.emplace_back(token::eToken::TK_Semicolon, "", _position.line,
                                _position.cursor);
   case ':':
-    this->_tokens.emplace_back(token::eToken::kColon, "", _position.line,
+    this->_tokens.emplace_back(token::eToken::TK_Colon, "", _position.line,
                                _position.cursor);
     break;
   case '#':
@@ -212,19 +211,19 @@ void midas::midas::scanner::Scanner::_scanToken() {
       this->advance();
     };
   case '"':
-    _create_string();
+    _createString();
     break;
   case '\'':
-    _create_char();
+    _createChar();
     break;
   default:
     if (std::isdigit(*_navigator)) {
-      _create_number();
+      _createNumber();
       break;
     };
 
     if (std::isalpha(*_navigator) || *_navigator == '_') {
-      _create_identifier();
+      _createIdentifier();
       break;
     };
     throw std::runtime_error("Unexpected Character");

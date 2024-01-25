@@ -5,7 +5,6 @@
 #include <vector>
 
 namespace midas {
-namespace midas {
 namespace parser {
 
 std::unique_ptr<ast::ASTTermNode> parseExpression(){};
@@ -199,5 +198,4 @@ std::unique_ptr<ast::ASTNode> Parser::parseImport(){};
 
 std::unique_ptr<ast::ASTNode> Parser::parseStart() { return parseBlock(); };
 } // namespace parser
-} // namespace midas
 } // namespace midas

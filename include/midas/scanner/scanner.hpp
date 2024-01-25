@@ -3,12 +3,8 @@
 
 #include "../token/token.hpp"
 #include "file.hpp"
-#include <cmath>
-#include <cstdint>
 #include <cstring>
-#include <iostream>
 #include <vector>
-namespace midas {
 namespace midas {
 namespace scanner {
 
@@ -25,17 +21,17 @@ public:
     _position = {1, 0, 0};
     _tokens = {};
   };
-  const Position get_position() const { return _position; };
-  const File get_file() const { return _file; };
+  const Position getPosition() const { return _position; };
+  const File getFile() const { return _file; };
   std::vector<token::Token> scanTokens();
-  std::vector<token::Token> get_tokens() const { return _tokens; };
+  std::vector<token::Token> getTokens() const { return _tokens; };
 
 private:
   void _scanToken();
-  void _create_string();
-  void _create_number();
-  void _create_identifier();
-  void _create_char();
+  void _createString();
+  void _createNumber();
+  void _createIdentifier();
+  void _createChar();
 
   File _file;
   Position _position;
@@ -87,6 +83,5 @@ private:
 };
 
 } // namespace scanner
-} // namespace midas
 } // namespace midas
 #endif

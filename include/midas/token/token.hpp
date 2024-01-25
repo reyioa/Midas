@@ -4,118 +4,117 @@
 #include <unordered_map>
 
 namespace midas {
-namespace midas {
 namespace token {
 
 enum eToken {
 
-  kEOF,
-  kNull,
-  kIden,
-  kInt,
-  kFloat,
-  kChar,
-  kString,
+  TK_EOF,
+  TK_Null,
+  TK_Iden,
+  TK_Int,
+  TK_Float,
+  TK_Char,
+  TK_String,
 
-  kAdd,  //+
-  kSub,  //-
-  kMult, // *
-  kQuo,  // /
-  kRem,  // %
+  TK_Add,  //+
+  TK_Sub,  //-
+  TK_Mult, // *
+  TK_Quo,  // /
+  TK_Rem,  // %
 
-  kAddAssign,  // +=
-  kSubAssign,  // -=
-  kMultAssign, // *=
-  kQuoAssign,  // /=
-  kRemAssign,  // %=
+  TK_AddAssign,  // +=
+  TK_SubAssign,  // -=
+  TK_MultAssign, // *=
+  TK_QuoAssign,  // /=
+  TK_RemAssign,  // %=
 
-  kAnd, // &
-  kOr,  // |
-  kXor, // ^
-  kShl, // <<
-  kShr, // >>
+  TK_And, // &
+  TK_Or,  // |
+  TK_Xor, // ^
+  TK_Shl, // <<
+  TK_Shr, // >>
 
-  kAndAssign, // &=
-  kOrAssign,  // |=
-  kXorAssign, // ^=
-  kShlAssign, // <<=
-  kShrAssign, // >>=
+  TK_AndAssign, // &=
+  TK_OrAssign,  // |=
+  TK_XorAssign, // ^=
+  TK_ShlAssign, // <<=
+  TK_ShrAssign, // >>=
 
-  kLogOr,    // ||
-  kLogAnd,   // &&
-  kArrow,    // ->
-  kBigArrow, // =>
-  kInc,      // ++
-  kDec,      // --
+  TK_LogOr,    // ||
+  TK_LogAnd,   // &&
+  TK_Arrow,    // ->
+  TK_BigArrow, // =>
+  TK_Inc,      // ++
+  TK_Dec,      // --
 
-  kEqual,   // ==
-  kLess,    // <
-  kGreater, // >
-  kNot,     // !
+  TK_Equal,   // ==
+  TK_Less,    // <
+  TK_Greater, // >
+  TK_Not,     // !
 
-  kLessEqual,    // <=
-  kGreaterEqual, // >=
-  kNotEqual,     // !=
+  TK_LessEqual,    // <=
+  TK_GreaterEqual, // >=
+  TK_NotEqual,     // !=
 
-  kAssign, // =
+  TK_Assign, // =
 
-  kLParen, // (
-  kLBrack, // {
-  kLBrace, // [
+  TK_LParen, // (
+  TK_LBrack, // {
+  TK_LBrace, // [
 
-  kRParen, // )
-  kRBrack, // }
-  kRBrace, // ]
+  TK_RParen, // )
+  TK_RBrack, // }
+  TK_RBrace, // ]
 
-  kComma,     // ,
-  kEllipsis,  // ...
-  kSemicolon, // ;
-  kColon,     // :
-  kPeriod,    // .
+  TK_Comma,     // ,
+  TK_Ellipsis,  // ...
+  TK_Semicolon, // ;
+  TK_Colon,     // :
+  TK_Period,    // .
 
   // Keywords
-  kIf,   // if
-  kElif, // elif
-  kElse, // else
+  TK_If,   // if
+  TK_Elif, // elif
+  TK_Else, // else
 
-  kFor,   // for
-  kWhile, // while
-  kDo,    // do
-  kIn,
+  TK_For,   // for
+  TK_While, // while
+  TK_Do,    // do
+  TK_In,
 
-  kSwitch,      // switch
-  kCase,        // case
-  kBreak,       // break
-  kContinue,    // continue
-  kDefault,     // default
-  kFallthrough, // Fallthrough
+  TK_Switch,      // switch
+  TK_Case,        // case
+  TK_Break,       // break
+  TK_Continue,    // continue
+  TK_Default,     // default
+  TK_Fallthrough, // Fallthrough
 
-  kFun,      // fun
-  kStatic,   // static
-  kImplicit, // implicit
-  kExplicit, // explicit
-  kExtern,   // extern
+  TK_Fun,      // fun
+  TK_Static,   // static
+  TK_Implicit, // implicit
+  TK_Explicit, // explicit
+  TK_Extern,   // extern
 
-  kStruct,    // struct
-  kInterface, // interface
-  kEnum,      // enum
-  kPublic,    // public
-  kPrivate,   // private
+  TK_Struct,    // struct
+  TK_Interface, // interface
+  TK_Enum,      // enum
+  TK_Public,    // public
+  TK_Private,   // private
 
-  kMutable, // mut
-  kConst,   // const
+  TK_Mutable, // mut
+  TK_Const,   // const
 
-  kTrue,  // true
-  kFalse, // false
+  TK_True,  // true
+  TK_False, // false
 
-  kImport, // import
-  kAPI,    // api
-  kAs,     // as
+  TK_Import, // import
+  TK_API,    // api
+  TK_As,     // as
 
   // Reserved
-  kAsync, // async
-  kAwait, // await
-  kYield, // yield
+  TK_Async, // async
+  TK_Await, // await
+  TK_Yield, // yield
 };
 struct Token {
   Token(const eToken &_token_type, const char *_txt, const int &_line,
@@ -129,53 +128,52 @@ struct Token {
 
 inline std::unordered_map<std::string, eToken> get_keywords() {
   return {
-      {"if", kIf},
-      {"elif", kElif},
-      {"else", kElse},
+      {"if", TK_If},
+      {"elif", TK_Elif},
+      {"else", TK_Else},
 
-      {"for", kFor},
-      {"while", kWhile},
-      {"do", kDo},
-      {"in", kIn},
+      {"for", TK_For},
+      {"while", TK_While},
+      {"do", TK_Do},
+      {"in", TK_In},
 
-      {"switch", kSwitch},
-      {"case", kCase},
-      {"break", kBreak},
-      {"continue", kContinue},
-      {"default", kDefault},
-      {"fallthrough", kFallthrough},
+      {"switch", TK_Switch},
+      {"case", TK_Case},
+      {"break", TK_Break},
+      {"continue", TK_Continue},
+      {"default", TK_Default},
+      {"fallthrough", TK_Fallthrough},
 
-      {"fun", kFun},
-      {"static", kStatic},
-      {"implicit", kImplicit},
-      {"explicit", kExplicit},
-      {"extern", kExtern},
+      {"fun", TK_Fun},
+      {"static", TK_Static},
+      {"implicit", TK_Implicit},
+      {"explicit", TK_Explicit},
+      {"extern", TK_Extern},
 
-      {"struct", kStruct},
-      {"interface", kInterface},
-      {"enum", kEnum},
-      {"public", kPublic},
-      {"private", kPrivate},
+      {"struct", TK_Struct},
+      {"interface", TK_Interface},
+      {"enum", TK_Enum},
+      {"public", TK_Public},
+      {"private", TK_Private},
 
-      {"mut", kMutable},
-      {"const", kConst},
+      {"mut", TK_Mutable},
+      {"const", TK_Const},
 
-      {"true", kTrue},
-      {"false", kFalse},
+      {"true", TK_True},
+      {"false", TK_False},
 
-      {"import", kImport},
-      {"api", kAPI},
-      {"as", kAs},
+      {"import", TK_Import},
+      {"api", TK_API},
+      {"as", TK_As},
 
       // Reserved
-      {"async", kAsync},
-      {"await", kAwait},
-      {"yield", kYield},
+      {"async", TK_Async},
+      {"await", TK_Await},
+      {"yield", TK_Yield},
   };
 }
 
 } // namespace token
-} // namespace midas
 } // namespace midas
 
 #endif

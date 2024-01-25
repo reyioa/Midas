@@ -6,7 +6,6 @@
 #include <memory>
 #include <vector>
 namespace midas {
-namespace midas {
 namespace parser {
 
 class Parser {
@@ -79,7 +78,6 @@ private:
 };
 
 } // namespace parser
-} // namespace midas
 } // namespace midas
 
 #endif
