@@ -284,15 +284,15 @@ struct ASTSwitchNode : ASTStatementNode {
 struct ASTStructDefinitionNode : ASTStatementNode {
   std::unique_ptr<ASTDefinitionNode> Name;
   std::unique_ptr<ASTTemplateNode> Template;
-  std::unique_ptr<ASTTokenNode> Privacy;
-  std::unique_ptr<std::vector<ASTTokenNode>> Definitions;
-  std::unique_ptr<std::vector<ASTCallExpressionNode>> Calls;
+  std::unique_ptr<std::vector<ASTTokenNode>> Privacy;
+  std::unique_ptr<std::vector<ASTDefinitionNode>> Definitions;
+  std::unique_ptr<ASTBlockNode> Calls;
   ASTStructDefinitionNode(
       std::unique_ptr<ASTDefinitionNode> Name,
       std::unique_ptr<ASTTemplateNode> Template,
-      std::unique_ptr<ASTTokenNode> Privacy,
-      std::unique_ptr<std::vector<ASTTokenNode>> Definitions,
-      std::unique_ptr<std::vector<ASTCallExpressionNode>> Calls)
+      std::unique_ptr<std::vector<ASTTokenNode>> Privacy,
+      std::unique_ptr<std::vector<ASTDefinitionNode>> Definitions,
+      std::unique_ptr<ASTBlockNode> Calls)
       : Name(std::move(Name)), Template(std::move(Template)),
         Privacy(std::move(Privacy)), Definitions(std::move(Definitions)),
         Calls(std::move(Calls)){};
@@ -310,21 +310,25 @@ struct ASTStructCallExpressionNode : ASTCallExpressionNode {
 
 struct ASTEnumDefinitionNode : ASTStatementNode {
   std::unique_ptr<ASTDefinitionNode> Name;
-  std::unique_ptr<std::vector<ASTTokenNode>> Values;
+  std::unique_ptr<std::vector<ASTStructCallValuesNode>> Values;
 
-  ASTEnumDefinitionNode(std::unique_ptr<ASTDefinitionNode> Name,
-                        std::unique_ptr<std::vector<ASTTokenNode>> Values)
+  ASTEnumDefinitionNode(
+      std::unique_ptr<ASTDefinitionNode> Name,
+      std::unique_ptr<std::vector<ASTStructCallValuesNode>> Values)
       : Name(std::move(Name)), Values(std::move(Values)){};
 };
 
 struct ASTInterfaceDefinitionNode : ASTStatementNode {
   std::unique_ptr<ASTDefinitionNode> Name;
+  std::unique_ptr<ASTTemplateNode> Template;
   std::unique_ptr<std::vector<ASTFunctionDefinitionNode>> Definitions;
 
   ASTInterfaceDefinitionNode(
       std::unique_ptr<ASTDefinitionNode> Name,
+      std::unique_ptr<ASTTemplateNode> Template,
       std::unique_ptr<std::vector<ASTFunctionDefinitionNode>> Definitions)
-      : Name(std::move(Name)), Definitions(std::move(Definitions)){};
+      : Name(std::move(Name)), Template(std::move(Template)),
+        Definitions(std::move(Definitions)){};
 };
 
 struct ASTAsyncNode : ASTStatementNode {

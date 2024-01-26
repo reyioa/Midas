@@ -52,12 +52,118 @@ std::unique_ptr<ast::ASTDoNode> Parser::parseDo(){};
 std::unique_ptr<ast::ASTCaseNode> Parser::parseCase(){};
 std::unique_ptr<ast::ASTSwitchNode> Parser::parseSwitch(){};
 
-std::unique_ptr<ast::ASTStructDefinitionNode> Parser::parseStructDefinition(){};
+std::unique_ptr<ast::ASTStructCallValuesNode> Parser::parseStructValues(){};
 std::unique_ptr<ast::ASTStructCallExpressionNode>
-Parser::parseStructDeclaration(){};
-std::unique_ptr<ast::ASTEnumDefinitionNode> Parser::parseEnumDefinition(){};
+Parser::parseStructDeclaration() {
+  std::unique_ptr<std::vector<ast::ASTVaribleTypeNode>> Template;
+  std::unique_ptr<ast::ASTStructCallValuesNode> StructsValues;
+};
+std::unique_ptr<ast::ASTStructDefinitionNode> Parser::parseStructDefinition() {
+  if (this->parseToken().get()->token.token_type != token::eToken::TK_Struct)
+    return nullptr;
+
+  std::unique_ptr<ast::ASTDefinitionNode> DefinitionNode =
+      this->parseDefinition();
+  std::unique_ptr<ast::ASTTemplateNode> TemplateNode = this->parseTemplate();
+
+  std::unique_ptr<std::vector<ast::ASTTokenNode>> TokenNodes;
+  std::unique_ptr<std::vector<ast::ASTDefinitionNode>> DefinitionNodes;
+  if (this->_Terminals[this->_TerminalCounter].token_type ==
+      token::eToken::TK_Colon) {
+    std::unique_ptr<ast::ASTTokenNode> TokenNode =
+        this->parseToken(this->_Terminals[this->_TerminalCounter]);
+
+    while (TokenNode->token.token_type == token::eToken::TK_Public ||
+           TokenNode->token.token_type == token::eToken::TK_Private) {
+
+      TokenNodes->push_back(*TokenNode.get());
+      std::unique_ptr<ast::ASTTokenNode> TokenNode =
+          this->parseToken(this->_Terminals[this->_TerminalCounter]);
+
+      std::unique_ptr<ast::ASTDefinitionNode> PrivacyDefinitionNode =
+          this->parseDefinition();
+      assert((DefinitionNode != nullptr) && "Expected Statement 'Definition'");
+      DefinitionNodes->push_back(*PrivacyDefinitionNode.get());
+    }
+
+    assert((DefinitionNodes->size() == TokenNodes->size()) &&
+           "Expecting Definition and Visiblitity to be the same amount");
+    this->nextToken();
+  }
+
+  this->nextToken();
+  assert((this->parseToken().get()->token.token_type ==
+          token::eToken::TK_LBrace) &&
+         "Expected '{'");
+
+  std::unique_ptr<ast::ASTBlockNode> BlockNode = this->parseBlock();
+
+  assert((this->parseToken().get()->token.token_type ==
+          token::eToken::TK_RBrace) &&
+         "Expected '}'");
+  return std::make_unique<ast::ASTStructDefinitionNode>(
+      std::move(DefinitionNode), std::move(TemplateNode), std::move(TokenNodes),
+      std::move(DefinitionNodes), std::move(BlockNode));
+};
+std::unique_ptr<ast::ASTEnumDefinitionNode> Parser::parseEnumDefinition() {
+
+  if (this->parseToken().get()->token.token_type != token::eToken::TK_Enum)
+    return nullptr;
+
+  std::unique_ptr<ast::ASTDefinitionNode> DefinitionNode =
+      this->parseDefinition();
+
+  assert((this->parseToken().get()->token.token_type ==
+          token::eToken::TK_LBrace) &&
+         "Expected '{'");
+  std::unique_ptr<std::vector<ast::ASTStructCallValuesNode>> EnumDefintions;
+  std::unique_ptr<ast::ASTStructCallValuesNode> EnumDefintion =
+      this->parseStructValues();
+  while (EnumDefintion != nullptr) {
+
+    EnumDefintions->push_back(*EnumDefintion.get());
+    std::unique_ptr<ast::ASTStructCallValuesNode> EnumDefintion =
+        this->parseStructValues();
+  }
+  assert((this->parseToken().get()->token.token_type ==
+          token::eToken::TK_LBrace) &&
+         "Expected '}'");
+  return std::make_unique<ast::ASTEnumDefinitionNode>(
+      std::move(DefinitionNode), std::move(EnumDefintions));
+};
+
 std::unique_ptr<ast::ASTInterfaceDefinitionNode>
-Parser::parseInterfaceDefinition(){};
+Parser::parseInterfaceDefinition() {
+
+  if (this->parseToken().get()->token.token_type != token::eToken::TK_Interface)
+    return nullptr;
+
+  std::unique_ptr<ast::ASTDefinitionNode> DefinitionNode =
+      this->parseDefinition();
+
+  assert((DefinitionNode != nullptr) && "Expected Statement 'Definition'");
+  std::unique_ptr<ast::ASTTemplateNode> TemplateNode = this->parseTemplate();
+
+  assert((this->parseToken().get()->token.token_type ==
+          token::eToken::TK_LBrace) &&
+         "Expected '{'");
+
+  std::unique_ptr<std::vector<ast::ASTFunctionDefinitionNode>> FuncDefinitions;
+  std::unique_ptr<ast::ASTFunctionDefinitionNode> FuncDefinition =
+      this->parseFunctionDefinition();
+  while (FuncDefinition != nullptr) {
+
+    FuncDefinitions->push_back(*FuncDefinition.get());
+    std::unique_ptr<ast::ASTFunctionDefinitionNode> FuncDefinition =
+        this->parseFunctionDefinition();
+  }
+  assert((this->parseToken().get()->token.token_type ==
+          token::eToken::TK_LBrace) &&
+         "Expected '}'");
+  return std::make_unique<ast::ASTInterfaceDefinitionNode>(
+      std::move(DefinitionNode), std::move(TemplateNode),
+      std::move(FuncDefinitions));
+};
 
 std::unique_ptr<ast::ASTAsyncNode> Parser::parseAsync() {
   std::unique_ptr<ast::ASTTokenNode> Node = this->parseToken();
@@ -65,7 +171,10 @@ std::unique_ptr<ast::ASTAsyncNode> Parser::parseAsync() {
     return nullptr;
   }
   std::unique_ptr<ast::ASTExpressionNode> Expr = this->parseExpression();
-  assert(Expr != nullptr);
+  assert((Expr != nullptr) && "Expected Statement 'Expr'");
+  assert((this->parseToken().get()->token.token_type ==
+          token::eToken::TK_Semicolon) &&
+         "Expected ';'");
   return std::make_unique<ast::ASTAsyncNode>(std::move(Expr));
 };
 std::unique_ptr<ast::ASTAwaitNode> Parser::parseAwait() {
@@ -74,7 +183,10 @@ std::unique_ptr<ast::ASTAwaitNode> Parser::parseAwait() {
     return nullptr;
   }
   std::unique_ptr<ast::ASTExpressionNode> Expr = this->parseExpression();
-  assert(Expr != nullptr);
+  assert((Expr != nullptr) && "Expected Statement 'Expr'");
+  assert((this->parseToken().get()->token.token_type ==
+          token::eToken::TK_Semicolon) &&
+         "Expected ';'");
   return std::make_unique<ast::ASTAwaitNode>(std::move(Expr));
 };
 std::unique_ptr<ast::ASTYieldNode> Parser::parseYield() {
@@ -83,7 +195,10 @@ std::unique_ptr<ast::ASTYieldNode> Parser::parseYield() {
     return nullptr;
   }
   std::unique_ptr<ast::ASTExpressionNode> Expr = this->parseExpression();
-  assert(Expr != nullptr);
+  assert((Expr != nullptr) && "Expected Statement 'Expr'");
+  assert((this->parseToken().get()->token.token_type ==
+          token::eToken::TK_Semicolon) &&
+         "Expected ';'");
   return std::make_unique<ast::ASTYieldNode>(std::move(Expr));
 };
 
@@ -113,8 +228,8 @@ std::unique_ptr<ast::ASTBlockNode> Parser::parseBlock() {
   std::unique_ptr<std::vector<ast::ASTStatementNode>> Nodes;
   std::unique_ptr<ast::ASTStatementNode> Node = this->parseStatement();
   while (Nodes != nullptr) {
-    std::unique_ptr<ast::ASTStatementNode> Node = this->parseStatement();
     Nodes->push_back(*Node.get());
+    std::unique_ptr<ast::ASTStatementNode> Node = this->parseStatement();
   }
   return std::make_unique<ast::ASTBlockNode>(std::move(Nodes));
 };

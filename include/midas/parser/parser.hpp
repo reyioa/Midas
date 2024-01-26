@@ -27,6 +27,7 @@ private:
   std::unique_ptr<ast::ASTBitshiftExpressionNode> parseBitshift();
   std::unique_ptr<ast::ASTBitwiseExpressionNode> parseBitwise();
   std::unique_ptr<ast::ASTTokenNode> parseToken();
+  std::unique_ptr<ast::ASTTokenNode> parseToken(const token::Token &Token);
   std::unique_ptr<ast::ASTElementNode> parseElement();
 
   std::unique_ptr<ast::ASTLiteralNode> parseLiteral();
@@ -52,6 +53,7 @@ private:
   std::unique_ptr<ast::ASTCaseNode> parseCase();
   std::unique_ptr<ast::ASTSwitchNode> parseSwitch();
 
+  std::unique_ptr<ast::ASTStructCallValuesNode> parseStructValues();
   std::unique_ptr<ast::ASTStructDefinitionNode> parseStructDefinition();
   std::unique_ptr<ast::ASTStructCallExpressionNode> parseStructDeclaration();
   std::unique_ptr<ast::ASTEnumDefinitionNode> parseEnumDefinition();
