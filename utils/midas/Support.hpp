@@ -11,16 +11,14 @@
 //   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //   See the License for the specific language governing permissions and
 //   limitations under the License.
-
-#include "midas/parser/parser.hpp"
-#include "midas/ast/astnode.hpp"
-#include "midas/token/token.hpp"
-#include <cassert>
-#include <functional>
-#include <memory>
-#include <stdexcept>
-#include <vector>
-
+#ifndef _MIDAS_UTILS_SUPPORT_HPP_
+#define _MIDAS_UTILS_SUPPORT_HPP_
+#include <typeinfo>
 namespace midas {
-namespace parser {} // namespace parser
+
+template <typename T, typename K> inline bool instanceof (const K &value) {
+  return typeid(T).hash_code() == typeid(K).hash_code();
+}
+
 } // namespace midas
+#endif

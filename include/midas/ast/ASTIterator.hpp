@@ -12,15 +12,17 @@
 //   See the License for the specific language governing permissions and
 //   limitations under the License.
 
-#include "midas/parser/parser.hpp"
-#include "midas/ast/astnode.hpp"
-#include "midas/token/token.hpp"
-#include <cassert>
-#include <functional>
-#include <memory>
-#include <stdexcept>
-#include <vector>
+#ifndef _MIDAS_INCLUDE_AST_ITERATOR_HPP_
+#define _MIDAS_INCLUDE_AST_ITERATOR_HPP_
 
 namespace midas {
-namespace parser {} // namespace parser
+namespace ast {
+
+class ASTTreeIterator {
+public:
+};
+} // namespace ast
+
 } // namespace midas
+
+#endif

@@ -1,4 +1,114 @@
-<expression> ::= <term> ( '*' | '/' ) <expression>
+<program> ::= <declaration>
+
+<declaration> ::= | <function-declaration>
+                  | <enum-declaration>
+                  | <struct-declaration>
+                  | <interface-declaration>
+                  | <mod-declaration>
+                  | <import>
+
+<import> ::= 'import' <identifier> ['as' <identifier>] ['api']
+
+<function-declaration> ::= 'fun'  <identifier> [<generic_type_parameters>] <parameter-list> '->' type '{' statement* '}'
+
+<generic_type_parameters> ::= '<' {(type  ['...']identifier {','  type ['..'] identifier}) }
+
+<parameter-list> ::= '(' [<parameter> {',' parameter} ] ')'
+
+<parameter> ::= unary-expression identifier
+
+
+<return-statement> ::= 'return' <binary-expression> ';'
+
+<varible-definition> ::= ('const' | 'var') <identifier> ':' <type> ['=' expression] ';'
+
+
+
+<switch-statement> ::= 'switch' expression '{' <case-clause>* '}'
+
+<assignment-definition> ::= identifier '=' expression ';'
+
+<case-clause> ::= 'case' <binary-expression> '=>' '{' statement* '}'
+          | 'default' '=>' '{' statement* '}'
+
+<for> ::= 'for' <type> <identifier> 'in' expression [('...' | '..=') expression] '{' statement* '}'
+
+<while> ::= 'while' <expression> '{' statement* '}'
+
+<if> ::= 'if' <expression> '{' statement'}' { <elif> } [<else>]
+
+<elif> ::= 'if' <expression> '{' statement'}' { <elif> } [<else>]
+
+<else> ::= 'else '{' statement* '}'
+
+
+<struct-declaration> ::= 'struct' <identifier> [<generic_type_parameters>] [':' ('public' | 'private' ) <identifier> {',' ('public' | 'private' ) <identifier> } } ]'{ ( <function-declaration> | <varible-definition>) '}'
+
+<struct-call> ::= [ '<' <type> '>'   ]'{' ['.' <identifier> ':' <boolean-expression> ) { ',' '.' <identifier> ':' <boolean-expression> } ';'
+
+
+<enum-clause> ::= <identifier> '=' expression';'
+
+<enum-definition> ::= 'enum' <identifier> '{' [  (<identifier> | <enum-clause> ){',' (<identifier> | <enum-clause>) }]
+
+<interface-declaration> ::= 'interface' <identifier> [<generic_type_parameters>] '{' <function-signature> '}'
+
+<function-signature> ::= 'fun' <identifier> [<generic_type_parameters>] <parameter-list> '->' type ';'
+
+
+<binary-expression> ::= <logical-or-expression>
+
+<logical-or-expression> ::= <logical-and-expression> ( 'or' <conditional-expression>)*
+                            | <conditional-expression>
+
+<logical-and-expression> ::= <logical-and-expression> ( 'and' <logical-or-expression>)*
+                            | <logical-or-expression>
+
+<wise-expression> ::= <wise-expression> ("&" | '|' | '^') <logical-and-expression>
+                      | <logical-and-expression>`
+
+<shift-expression> ::= <shift-expression> ('<<' | '>>') <wise-expression>
+                      | <wise-expression>
+
+<additive-expression> ::= <additive-expression> ("+" | '-') <shift-expression>
+                          | <shift-expression>
+
+<multiplicative-expression> ::= <muliplicative-expression> ("*" | '/' | '%') unary-expression
+                                | <unary-expression>
+
+<unary-expression> ::= ["!" | "--" | "++" | "$" | "&" | "*" | "~"] <primary-expression>
+
+
+<primary-expression> ::= <literal>
+                      |<identifier>
+                      | '(' <binary-expression> ')'
+                      | <function-call>
+                      | <struct-call>
+                      | <if>
+                      | <switch>
+
+		      
+<statement> ::=   | <switch>
+		  | <expression>
+		  | <return-statement>
+                  | <if>
+                  | <switch>
+                  | <for>
+                  | <while>
+		  | <assignment-definition>
+		  | <varible-definitoin>
+
+<function-call> ::= <identifier> '(' arguement-list ')'
+
+<arguement-list> ::= expression { ',' expression }
+
+<identifier> ::= <word> {('=>' | '.' )<word>}
+
+
+
+
+
+cdvexpression> ::= <term> ( '*' | '/' ) <expression>
                 | <term>
 
 <term> ::= <bitshift> ('+' | '-') <term>
@@ -33,7 +143,7 @@
 <template>  ::= '[' [ '...' ]<identifier> { ',' <identifier> } ']'
 
 
-<function-definition> ::= 'fun' '( <parameter-list> ')' [ template ] -> <type> ( ';' | <block> )
+<function-definition> ::= 'fun' '( <parameter-list> ')' [ template ] -> <type> ( ';' | <block> )A:4@r%uL`M-^M0c0AbcM-MFE067d3eh2bN"
 
 <function-declaration> ::= <definition> [type {',' type} ]'(' [<definition>] { ',' <definition> } ')'
 
@@ -88,4 +198,3 @@
 
 [definition ->  term • * expression, * | /]
 [definition ->  term • / expression, * | /]
-

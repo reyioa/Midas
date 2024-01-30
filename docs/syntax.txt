@@ -1,0 +1,107 @@
+import Main api
+import OS
+
+
+// This is a comment
+
+/*
+This is a multiline comment
+*/
+
+fun <type T, ...Ts> instanceof(T input) -> bool {
+    const value: T = input;
+    var value_ptr: ptr<T> =  *value;
+    var value_ptr_2: *T =  *value;
+    const value_2: T = &value_ptr;
+    const boolean: bool = switch (value_2) {
+        case 1 => true;
+        case 2 =>{
+            true;
+        }
+        default => {
+            false;
+        }
+    }
+
+    switch (value_2) {
+        return => true;
+        case 2 =>{
+            return true;
+        }
+        default => {
+            return false;
+        }
+    }
+}
+enum ReturnCalls {
+    FAILED = 1,
+    SUCCESS = 4,
+}
+
+
+struct Block {
+    int x[65];  // 65 sized array
+    int *y;     // Pointer to int
+}
+
+interface Geometry {
+    int size();
+}
+
+struct Triangle : public Geometry, private Block{
+    int b, h;
+    int size() {
+        while true  {
+            break;
+        }
+
+        while (false) {
+            continue;
+        }
+        
+        for i in 1...10 {
+            break;
+        }
+
+        for (i in 1..=10) {
+            break;
+        }
+        
+    }
+}
+
+
+mod saucy {
+
+fun coolsauce(const int also) -> ReturnCalls {
+    if (also + 4 > 6) {
+        OS.Println("Also + 4 is greater than 6");
+        return SUCCESS;
+    } elif(also + 3 != 4) {
+        OS.Println("Also + 3 is greater than 4");
+        return SUCCESS;
+    }
+    else {
+        return ReturnCalls->FAILED;
+    }
+    
+}
+
+}
+
+
+fun main() -> void {
+    var x: float = 3 * 2 + (4 + 4) << (4 & 6);
+    const y: bool = 4 and false or true; // True
+
+    saucy=>coolsauce(5);
+
+    var b: Block = {
+        .x = [1, 2, 3, ...]
+    } 
+
+
+
+   x = instanceof<float, char, bool, string>(x);
+
+}
